@@ -1,5 +1,7 @@
-import { IMovieItem } from '../types/IMovie';
+import { Dispatch } from 'redux';
 
+import { api } from '../services/api';
+import { IMovieItem } from '../types/IMovie';
 import { ADD_MOVIE, REMOVE_MOVIE } from './actionTypes';
 
 interface IAction {
@@ -20,3 +22,22 @@ export const removeMovie = (movie: IMovieItem) => (
     payload: movie,
   } as IAction
 );
+
+export function getMovieInfo(id: number) {
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await api.get<IMovieItem>(`/movie/${id}`);
+
+      setTimeout(() => {
+        dispatch(addMovie(response.data));
+
+        return response;
+      }, 2000);
+
+      // dispatch(addMovie(response.data));
+      // return response;
+    } catch(error) {
+      console.error(error);
+    }
+  }
+}

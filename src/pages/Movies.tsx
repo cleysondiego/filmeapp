@@ -3,30 +3,29 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { connect } from "react-redux";
-import { addMovie } from "../redux/actions";
+import { getMovieInfo } from "../redux/actions";
 import { api } from "../services/api";
 import { IMovieItem } from "../types/IMovie";
 
 type IState = {
-  addMovie: (movie: IMovieItem) => void;
+  getMovieInfo: (id: number) => void;
 }
 
 interface IResponse {
   results: IMovieItem[]
 }
 
-function Movies({ addMovie }: IState) {
+function Movies({ getMovieInfo }: IState) {
   const [movies, setMovies] = useState<IMovieItem[]>([]);
 
   useEffect(() => {
     const FetchData = async (): Promise<void> => {
       try {
         const response = await api.get<IResponse>('/movie/popular');
-        // const response = await axios.get<IResponse>(`https://api.themoviedb.org/3/movie/popular?api_key=e125d46a9e74f39d2ecafa3b18ce627d&language=pt-BR`)
 
         setMovies(response.data.results);
-      } catch(err) {
-        // alert(err);
+      } catch(error) {
+        console.error(error);
       }
 
     }
@@ -42,7 +41,7 @@ function Movies({ addMovie }: IState) {
         return (
           <View style={styles.viewContainer} key={movie.id}>
             <TouchableOpacity
-              onPress={() => addMovie(movie)}
+              onPress={() => getMovieInfo(movie.id)}
               activeOpacity={0.7}
               style={styles.itemStyle}
             >
@@ -95,4 +94,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(null, { addMovie })(Movies);
+export default connect(null, { getMovieInfo })(Movies);
