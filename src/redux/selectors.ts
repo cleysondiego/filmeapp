@@ -1,0 +1,1 @@
+export const getMovies = (store: any) => store.cart;
