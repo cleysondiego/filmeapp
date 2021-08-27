@@ -1,7 +1,8 @@
 import React from 'react';
-import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { removeMovie } from '../redux/actions';
 import { IMovie } from '../types/IMovie';
@@ -34,35 +35,45 @@ function Cart({ cart, removeMovie }: ICartState) {
   );
 
   return (
-    <ScrollView style={styles.container}>
-      {cart.map(movie => {
-        const uri = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    <ScrollView contentContainerStyle={styles.container}>
+      {cart.length > 0 ? cart.map(movie => {
+          const uri = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
 
-        return (
-          <View style={styles.viewContainer} key={movie.id}>
-            <TouchableOpacity
-              onPress={() => showAlert(movie)}
-              activeOpacity={0.7}
-              style={styles.itemStyle}
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri }}
-                  style={styles.image}
-                />
-              </View>
-            </TouchableOpacity>
+          return (
+            <View style={styles.viewContainer} key={movie.id}>
+              <TouchableOpacity
+                onPress={() => showAlert(movie)}
+                activeOpacity={0.7}
+                style={styles.itemStyle}
+              >
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={{ uri }}
+                    style={styles.image}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          );
+        })
+        :
+        (
+          <View style={styles.messageContainer}>
+            <Text>
+              <Icon name='cart-outline' size={23} />
+              Carrinho vazio!
+            </Text>
           </View>
-        );
-      })}
+        )
+      }
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '100%',
+    flexGrow: 1,
+    justifyContent: 'center'
   },
   viewContainer: {
     width: '100%',
@@ -91,7 +102,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 12,
-  }
+  },
+  messageContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default connect(mapStateToProps, { removeMovie })(Cart);
