@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -39,19 +39,24 @@ function Movies() {
         const uri = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
 
         return (
-          <View style={styles.viewContainer} key={movie.id}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('MovieInfo', { movie })}
-              activeOpacity={0.7}
-              style={styles.itemStyle}
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri }}
-                  style={styles.image}
-                />
-              </View>
-            </TouchableOpacity>
+          <View style={styles.view} key={movie.id}>
+            <View style={styles.viewContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('MovieInfo', { movie })}
+                activeOpacity={0.7}
+                style={styles.itemStyle}
+              >
+                <View style={styles.imageContainer}>
+                  <Image
+                    source={{ uri }}
+                    style={styles.image}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={{ marginBottom: 24 }}>
+              <Text style={{ fontSize: 24 }}>{movie.title}</Text>
+            </View>
           </View>
         );
       })}
@@ -63,6 +68,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
+  },
+  view: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   viewContainer: {
     width: '100%',
