@@ -1,27 +1,27 @@
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { connect } from "react-redux";
-import { getMovieInfo } from "../redux/actions";
-import { api } from "../services/api";
-import { IMovieItem } from "../types/IMovie";
+import React, { useState, useEffect } from 'react';
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-type IState = {
-  getMovieInfo: (id: number) => void;
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+import { api } from '../services/api';
+import { IMovie } from '../types/IMovie';
+import { IStackParamList } from '../types/IStackParamsList';
+
+interface IApiResponse {
+  results: IMovie[]
 }
 
-interface IResponse {
-  results: IMovieItem[]
-}
+type IMovieInfoNavigation = StackNavigationProp<IStackParamList, 'MovieInfo'>;
 
-function Movies({ getMovieInfo }: IState) {
-  const [movies, setMovies] = useState<IMovieItem[]>([]);
+function Movies() {
+  const [movies, setMovies] = useState<IMovie[]>([]);
+  const navigation = useNavigation<IMovieInfoNavigation>();
 
   useEffect(() => {
     const FetchData = async (): Promise<void> => {
       try {
-        const response = await api.get<IResponse>('/movie/popular');
+        const response = await api.get<IApiResponse>('/movie/popular');
 
         setMovies(response.data.results);
       } catch(error) {
@@ -41,7 +41,7 @@ function Movies({ getMovieInfo }: IState) {
         return (
           <View style={styles.viewContainer} key={movie.id}>
             <TouchableOpacity
-              onPress={() => getMovieInfo(movie.id)}
+              onPress={() => navigation.navigate('MovieInfo', { movie })}
               activeOpacity={0.7}
               style={styles.itemStyle}
             >
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     borderRadius: 18,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
         width: 0,
         height: 4,
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(null, { getMovieInfo })(Movies);
+export default Movies;

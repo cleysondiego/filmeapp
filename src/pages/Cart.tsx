@@ -1,17 +1,37 @@
-import React from "react";
-import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { connect } from "react-redux";
-import { removeMovie } from "../redux/actions";
-import { IMovieItem } from "../types/IMovie";
-import { IState } from "../types/IState";
+import React from 'react';
+import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-const mapStateToProps = (state: IState) => state.cart;
+import { connect } from 'react-redux';
 
-function Cart({ cart, removeMovie }: IState) {
+import { removeMovie } from '../redux/actions';
+import { IMovie } from '../types/IMovie';
 
-  function handleRemoveMovie(movie: IMovieItem) {
-    removeMovie(movie);
-  }
+interface ICartState {
+  cart: IMovie[],
+  removeMovie: (movie: IMovie) => void;
+}
+
+const mapStateToProps = (state: ICartState) => state.cart;
+
+function Cart({ cart, removeMovie }: ICartState) {
+  const showAlert = (movie: IMovie) => Alert.alert(
+    'Atenção!',
+    'Você realmente deseja remover o filme do carrinho?',
+    [
+      {
+        text: 'Remover',
+        onPress: () => removeMovie(movie),
+        style: 'default',
+      },
+      {
+        text: 'Cancelar',
+        style: 'cancel'
+      }
+    ],
+    {
+      cancelable: true,
+    }
+  );
 
   return (
     <ScrollView style={styles.container}>
@@ -21,7 +41,7 @@ function Cart({ cart, removeMovie }: IState) {
         return (
           <View style={styles.viewContainer} key={movie.id}>
             <TouchableOpacity
-              onPress={() => handleRemoveMovie(movie)}
+              onPress={() => showAlert(movie)}
               activeOpacity={0.7}
               style={styles.itemStyle}
             >
@@ -62,7 +82,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     borderRadius: 18,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
         width: 0,
         height: 4,

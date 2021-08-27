@@ -1,14 +1,12 @@
-import { combineReducers } from "redux";
-import { IMovieItem } from "../types/IMovie";
-import { ADD_MOVIE, REMOVE_MOVIE } from "./actionTypes";
+import { combineReducers } from 'redux';
 
-interface IAction {
-  type: typeof ADD_MOVIE | typeof REMOVE_MOVIE;
-  payload: IMovieItem;
-}
+import { IAction } from '../types/IAction';
+import { IMovie } from '../types/IMovie';
+
+import { ADD_MOVIE, REMOVE_MOVIE } from './actionTypes';
 
 const INITIAL_STATE = {
-  cart: [] as IMovieItem[],
+  cart: [] as IMovie[],
 }
 
 const cartReducer = (state = INITIAL_STATE, action: IAction) => {
